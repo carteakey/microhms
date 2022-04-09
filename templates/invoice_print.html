@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from 'bootstrap4/form.html' import render_field %}
+{% from 'bootstrap4/table.html' import render_table %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function () {
+    $('#data').DataTable();
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <h3>Print Invoice</h3>
+  <hr>
+  <form method="POST" action="{{ url_for('printinvoice') }}">
+    {{ form.csrf_token() }}
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.invoice_num, class='form-control', placeholder='Invoice#') }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Print</button>
+    <a class='btn btn-danger' href="{{ url_for('homepage') }}">Cancel</a>
+</div>
+<br>
+
+<div class="container-fluid">
+  <h3>Recent Invoices</h3>
+
+  {{
+  render_table(
+  invoices,
+  titles=titles,
+  show_actions=True,
+  model=InvoiceHeaders,
+  responsive=True,
+  delete_url =('delete_invoice',[('invoice_id', ':id')]),
+  custom_actions=[('Print', 'printer', ('print_invoice', [('invoice_id', ':id')]))]
+  )
+  }}
+
+</div>
+
+{% endblock %}
