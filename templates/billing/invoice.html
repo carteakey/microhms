@@ -9,7 +9,7 @@
 
 
 <body>
-    <p style="float: left;"><img alt="" src="{{ url_for('static', filename='logo.png') }}" height="120px"></p>
+    <p style="float: left;"><img alt=""  src="{{ image_path }}" style="height:100px;"></p>
     <p>&nbsp;</p>
     <p style="text-align: right; line-height: 150%;">
         {{ company_name }} <br>
@@ -17,6 +17,7 @@
         Email: {{ email }} <br>
         Ph: {{ phone }}</p>
     <p>&nbsp;</p>
+
     <p style="text-align: center;"><b>Bill of Supply / Tax Invoice</b></p>
 
     <hr>
@@ -106,7 +107,11 @@
                 <td>{{ hotel }}</td>
                 <td>&nbsp;</td>
             </tr>
-
+            <tr>
+                <td>Category:</td>
+                <td>{{ category }}</td>
+                <td>&nbsp;</td>
+            </tr>
         </tbody>
     </table>
 
@@ -191,17 +196,31 @@
                 <td>Net Payable Amount:</td>
                 <td>₹{{ npa }}</td>
             </tr>
-
+         
             <tr>
                 <td></td>
             </tr>
 
             <tr>
                 <td>&nbsp;</td>
+                <td>PAN No.:</td>
+                <td>{{ pan }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>GSTIN:</td>
+                <td>{{ gstin }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
                 <td>GST Legal Name:</td>
                 <td>{{ company_name }}</td>
             </tr>
-
+            <tr>
+                <td>&nbsp;</td>
+                <td>Accounting Code of Services:</td>
+                <td>{{ acs }}</td>
+            </tr>
             <tr>
                 <td>&nbsp;</td>
                 <td>Hotel Address:</td>
@@ -212,7 +231,8 @@
     </table>
 
     <p style="text-align: right;">E&O.E</p>
-    <p style="float: right;"><img alt="" src="{{ url_for('static', filename='stamp.png') }}" style="height:80px;"><br>
+    
+    <p style="float: right;"><img alt=""src="{{ sign }}" style="height:80px;"><br>
         <b> Authorized Signatory</b>
     </p>
     <div style="clear: both"></div>

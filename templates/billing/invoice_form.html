@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_field,render_form_row %}
+{% from 'bootstrap5/table.html' import render_table %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{ url_for('static', filename='/js/app.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+  <h3 class="align-center"> BILLING ENTRY </h3>
+  <form method="POST" action="{{ url_for('invoice_form') }}" ,enctype="multipart/form-data" novalidate>
+
+    {{ form.csrf_token() }}
+
+    {{ render_form_row([form.hotel,form.invoice_num,form.invoice_date,form.booking_id,form.booking_date]) }}
+
+    {{ render_form_row([form.payee,form.guest,form.gstin,form.category,form.rooms]) }}
+
+    {{ render_form_row([form.arrive,form.depart,form.nights,form.guest_details], col_map={'arrive': 'col-md-2','depart': 'col-md-2','nights': 'col-md-2'}) }}
+    
+    <hr>
+
+    <div class="table-responsive">
+      <table id="data">
+        <thead>
+          <tr>
+            <th style="text-align: center; width: 15%">Particulars</th>
+            <th style="text-align: center;">HSN/SAC</th>
+            <th style="text-align: center;">Stay Date</th>
+            <th style="text-align: center;">Sell Rate</th>
+            <th style="text-align: center; width: 8%">Inclusion</th>
+            <th style="text-align: center;">Sub Total</th>
+            <th style="text-align: center;">CGST</th>
+            <th style="text-align: center;">SGST</th>
+            <th style="text-align: center;">Total</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {% for line in form.lines %}
+          <tr>
+            <td>{{ render_field(line.particulars,form_type='inline', class= 'form-control', onblur="populate()" )}}
+            </td>
+            <td>{{ render_field(line.hsnsac, form_type='inline',class='form-control') }}</td>
+            <td>{{ render_field(line.stay_date, form_type='inline',class='form-control') }}</td>
+            <td>{{ render_field(line.sell_rate, form_type='inline',class='form-control', onblur="populate()") }}</td>
+            <td>{{ render_field(line.inclusion, form_type='inline',class='form-control', onblur="populate()") }}</td>
+            <td>{{ render_field(line.subtotal, form_type='inline',class='subtotal form-control', onblur="populate()") }}
+            </td>
+            <td>{{ render_field(line.cgst, form_type='inline',class='form-control') }}</td>
+            <td>{{ render_field(line.sgst, form_type='inline',class='form-control') }}</td>
+            <td>{{ render_field(line.total, form_type='inline',class='form-control') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+    <button type="submit" name='button' value='Add Line' class='btn btn-secondary'>+</button>
+    <button type="submit" name='button' value='Delete Line' class='btn btn-secondary float-end'>-</button>
+    
+    <hr>
+
+    {{ render_form_row([form.payment_mode,form.tpr,form.npa], col_map={'payment_mode': 'col-md-2','tpr': 'col-md-2','npa': 'col-md-2'}) }}
+
+    <hr>
+
+    <button type="submit" name='button' value='Submit' class="btn btn-primary">Submit</button>
+
+    <a class='btn btn-danger' href="{{ url_for('homepage') }}">Cancel</a>
+
+<br>
+<br>
+
+</form>
+</div>
+
+{% endblock %}

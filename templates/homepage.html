@@ -1,13 +1,12 @@
 {% extends "base.html" %}
-{% from 'bootstrap4/form.html' import render_field %}
+{% from 'bootstrap5/form.html' import render_field %}
 
 {% block content %}
 <div class="container-fluid">
   <h3>Navigate to></h3>
-
-  <a class='btn btn-primary' href="{{ url_for('invoice_form') }}">Billing Entry</a>
-
-  <a class='btn btn-primary' href="{{ url_for('invoice') }}">Print Invoice</a>
+  <a class='btn btn-secondary' href="{{ url_for('invoice_form') }}">Billing Entry</a>
+      
+  <a class='btn btn-secondary' href="{{ url_for('invoice') }}">Print Invoice</a>
   <br>
   <br>
 </div>

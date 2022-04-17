@@ -5,10 +5,10 @@ body {
     /* width: 595px; */
     /* width: 700px; */
     /* to centre page on screen*/
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto; */
+    /* margin-right: auto; */
     /* background-color: #FAFAFA; */
-    font: 10pt "Helvetica";
+    font: 8.5pt "Helvetica";
 }
 hr{
     height:2px;

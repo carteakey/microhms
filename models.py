@@ -5,7 +5,6 @@ from sqlalchemy.orm import relationship,validates
 
 db = SQLAlchemy(app)
 
-
 class Config(db.Model):
     __tablename__ = "config"
     id = db.Column(db.Integer, primary_key=True)
@@ -13,6 +12,10 @@ class Config(db.Model):
     address = db.Column(db.String())
     email = db.Column(db.String())
     phone = db.Column(db.String())
+    hsnsac = db.Column(db.String())
+    pan = db.Column(db.String())
+    gstin = db.Column(db.String())
+    acs = db.Column(db.String())
 
 class ChargeTypes(db.Model):
     __tablename__ = "charges"
@@ -41,10 +44,12 @@ class InvoiceHeaders(db.Model):
     payee = db.Column(db.String())
     guest = db.Column(db.String())
     guest_details = db.Column(db.String())
+    gstin = db.Column(db.String())
     arrive = db.Column(db.Date()) 
     depart = db.Column(db.Date())
     nights = db.Column(db.Integer)
     rooms = db.Column(db.Integer)
+    category = db.Column(db.String())
     hotel_id = db.Column(db.Integer,db.ForeignKey("hotels.id"))
     payment_mode_id = db.Column(db.Integer,db.ForeignKey("payment_modes.id"))
     tpr = db.Column(db.Numeric(10,2))
@@ -66,11 +71,13 @@ class InvoiceHeaders(db.Model):
         payee ,
         guest,
         guest_details,
+        gstin ,
         arrive,
         depart ,
         nights ,
         rooms ,
-        hotel_id,
+        category, 
+        hotel_id ,
         payment_mode_id,  
         tpr ,
         npa  
@@ -82,10 +89,12 @@ class InvoiceHeaders(db.Model):
         self.payee = payee
         self.guest= guest
         self.guest_details= guest_details
+        self.gstin = gstin
         self.arrive= arrive
         self.depart = depart
         self.nights = nights
         self.rooms = rooms
+        self.category = category
         self.hotel_id = hotel_id
         self.payment_mode_id  = payment_mode_id
         self.tpr  = tpr
