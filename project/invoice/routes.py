@@ -267,7 +267,7 @@ def save_invoice(invoice_id):
 
     html_out = render_template("invoice.html", **invoice_dict)
 
-    HTML(string=html_out).write_pdf(file, stylesheets=["./project/invoice/static/css/styles.css"])
+    HTML(string=html_out).write_pdf(file, stylesheets=[ url_for('invoice.static', filename='/js/app.js') ])
 
     return_data = io.BytesIO()
     with open(file, "rb") as fo:
@@ -299,8 +299,8 @@ def gen_invoice(invoice_id):
         .first()
     )
 
-    headers["image_path"] = "file://" + os.path.join(this_folder, "static", "logo.png")
-    headers["sign"] = "file://" + os.path.join(this_folder, "static", "stamp_g.jpg")
+    headers["image_path"] = "file://" + os.path.join(this_folder, "static", "logo_invoice.jpg")
+    headers["sign"] = "file://" + os.path.join(this_folder, "static", "stamp.png")
 
     headers["hotel"] = hotel.name
     headers["hotel_address"] = hotel.address

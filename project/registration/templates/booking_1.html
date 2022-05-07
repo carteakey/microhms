@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_field,render_form %}
+
+
+{% block content %}
+
+<div class="container">
+
+  <h3>Guest Registration</h3>
+  <hr>
+
+  <form method="POST" action="{{ url_for('sendotp') }}">
+
+    {{ form.csrf_token() }}
+
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.mobile, class='form-control', placeholder='Mobile') }}
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="form-group col-md-2 ">
+        {{render_field(form.otp, class='form-control', placeholder='OTP') }}
+      </div>
+
+    </div>
+
+    <button type="submit" name='button' value='Send OTP' class='btn btn-secondary'>Send OTP</button>
+
+    <button type="submit" name='button' value='Verify' class="btn btn-primary">Verify OTP</button>
+
+    <a class='btn btn-danger' href="{{ url_for('homepage') }}">Cancel</a>
+
+  </form>
+
+  <h4 style='float:right;'> Page 1 of 3 &nbsp; &nbsp; &nbsp; &nbsp;</h4>
+
+</div>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_field %}
+
+{% block content %}
+
+<div class="container">
+
+  <h3>Guest Registration</h3>
+  <hr>
+  <h4>Guest Details</h4>
+  <form method="POST" action="{{ url_for('booking_2') }}" ,enctype="multipart/form-data">
+    {{ form.csrf_token() }}
+
+    {% if existing %}
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.mobile, disabled=True, class='form-control',
+        placeholder='Mobile') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.first_name, disabled=True, class='form-control',
+        placeholder='First name') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.last_name, disabled=True, class='form-control',
+        placeholder='Last name') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.email, disabled=True, class='form-control',
+        placeholder='Email') }}
+      </div>
+    </div>
+
+    {% else %}
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.mobile, disabled=True, class='form-control',
+        placeholder='Mobile') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.first_name, class='form-control',
+        placeholder='First name') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.last_name, class='form-control',
+        placeholder='Last name') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.email, class='form-control',
+        placeholder='Email') }}
+      </div>
+      <div class="form-group col-md-3">
+        {{ render_field(form.docs, accept="image/*", capture="camera", class='form-control',
+        placeholder='Guest Docs') }}
+      </div>
+    </div>
+
+    {% endif %}
+
+    <hr>
+    <h4>Booking Details</h4>
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.hotel, class='form-control',min="0", max="9",
+        placeholder='Hotel') }}
+      </div>
+
+      <div class="form-group col-md-2">
+        {{ render_field(form.guests, class='form-control',
+        placeholder='Total Guests') }}
+      </div>
+
+      <div class="form-group col-md-2">
+        {{ render_field(form.room, class='form-control',
+        placeholder='Room No') }}
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.tariff, class='form-control',
+        placeholder='Tariff') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.checkin, class= 'form-control',
+        placeholder='Check-in Date') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.checkout, class= 'form-control',
+        placeholder='Check-Out Date') }}
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.source, class='form-control',
+        placeholder='Source') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.operator, class='form-control',
+        placeholder='Operator') }}
+      </div>
+
+    </div>
+
+    <hr>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <a class='btn btn-danger' href="{{ url_for('homepage') }}">Cancel</a>
+
+    <h4 style='float:right;'> Page 2 of 3 &nbsp; &nbsp; &nbsp; &nbsp;</h4>
+
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_field %}
+
+{% block content %}
+
+<div class="container">
+
+
+  <h3>Guest Registration</h3>
+  <hr>
+
+  <form method="POST" action="{{ url_for('booking_3') }}">
+
+    {{ form.csrf_token() }}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.payment_mode, class='form-control', placeholder='Payment Mode') }}
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        {{render_field(form.tpr, id ='tpr', class='form-control', placeholder='Total Payment Received') }}
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        {{render_field(form.npa, class='form-control', placeholder='Net Payable Amount') }}
+      </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <a class='btn btn-danger' href="{{ url_for('homepage') }}">Cancel</a>
+
+  </form>
+
+  <h4 style='float:right;'> Page 3 of 3 &nbsp; &nbsp; &nbsp; &nbsp;</h4>
+
+</div>
+{% endblock %}
