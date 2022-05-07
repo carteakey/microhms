@@ -1,11 +1,5 @@
-import os
-import io
-from dotenv import load_dotenv
-from flask_wtf import CSRFProtect
-
-# Flask
+from flask import current_app as app
 from flask import (
-    Flask,
     render_template,
     request,
     flash,
@@ -13,38 +7,17 @@ from flask import (
     redirect,
     url_for,
     jsonify,
+    Blueprint,
 )
+from flask.logging import create_logger
+from flask_login import login_required, current_user
 
 from weasyprint import HTML
+import os
+import io
 
-from flask.logging import create_logger
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_bootstrap import Bootstrap5
-
-# Load Environment Variables
-load_dotenv()
-
-# Config
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["SQLALCHEMY_DATABASE_URL"]
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
-app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024
-app.config["BOOTSTRAP_BOOTSWATCH_THEME"] = "Zephyr"
-app.config["BOOTSTRAP_SERVE_LOCAL"] = True
-# Loggger
-log = create_logger(app)
-
-# Bootstrap
-Bootstrap5(app)
-
-# DB
-db = SQLAlchemy(app)
-
-csrf = CSRFProtect(app)
-
-from models import (
+# Custom
+from project.models import (
     InvoiceHeaders,
     PaymentModes,
     db,
@@ -53,29 +26,20 @@ from models import (
     ChargeTypes,
     InvoiceLines,
 )
-
-migrate = Migrate(app, db, compare_type=True)
-
-# Custom
-from util import get_totals, calc_gst
-from forms.billing import InvoiceForm, PrintInvoiceForm
+from project.util import get_totals, calc_gst
+from project.invoice.forms import InvoiceForm, PrintInvoiceForm
 
 this_folder = os.path.dirname(os.path.abspath(__file__))
 
-@app.errorhandler(404)
-def page_not_found(e):
-    # note that we set the 404 status explicitly
-    return render_template("404.html", error=e), 404
+# Loggger
+log = create_logger(app)
 
-# Routes
-@app.route("/", methods=["GET", "POST"])
-def homepage():
-    """
-    homepage route
-    """
-    return render_template("homepage.html")
+invoice_bp = Blueprint(
+    "invoice", __name__, template_folder="templates", static_folder="static",static_url_path='/login/static')
 
-@app.route("/invoice", methods=["GET", "POST"])
+
+@invoice_bp.route("/invoice", methods=["GET", "POST"])
+@login_required
 def invoice():
     form = PrintInvoiceForm()
 
@@ -117,12 +81,8 @@ def invoice():
         ("total", "Total"),
     ]
 
-    log.debug(invoices)
-
-    # invoices = pagination.items
-
     return render_template(
-        "billing/invoice_print.html",
+        "invoice_print.html",
         form=form,
         titles=titles,
         invoices=invoices,
@@ -130,12 +90,12 @@ def invoice():
     )
 
 
-@app.route("/invoice_form/", defaults={"invoice_id": None}, methods=["GET", "POST"])
-@app.route("/invoice_form/<int:invoice_id>", methods=["GET", "POST"])
+@invoice_bp.route("/invoice_form/", defaults={"invoice_id": None}, methods=["GET", "POST"])
+@invoice_bp.route("/invoice_form/<int:invoice_id>", methods=["GET", "POST"])
+@login_required
 def invoice_form(invoice_id):
     form = InvoiceForm()
     log.debug(request.form)
-    log.debug(form.errors)
 
     if request.method == "GET":
         if invoice_id is not None:
@@ -161,21 +121,17 @@ def invoice_form(invoice_id):
             form.tpr.data = header.tpr
             form.npa.data = header.npa
 
-            lines = (
-                db.session.query(InvoiceLines)
-                .filter(InvoiceLines.invoice_id == invoice_id)
+            lines = db.session.query(InvoiceLines).filter(
+                InvoiceLines.invoice_id == invoice_id
             )
 
     if request.method == "POST":
-        log.debug("POST")
         if request.form["button"] == "Add Line":
             form.lines._add_entry()
         elif request.form["button"] == "Delete Line":
             form.lines.pop_entry()
 
         elif form.validate_on_submit():
-            log.debug(form.lines)
-            log.debug("validation complete")
             invoice_num = form.invoice_num.data
             invoice_date = form.invoice_date.data
             booking_id = form.booking_id.data
@@ -246,17 +202,15 @@ def invoice_form(invoice_id):
                 count += 1
             db.session.commit()
             flash("Entry added.", "success")
-            return redirect(url_for("homepage"))
+            return redirect(url_for("main.homepage"))
 
     else:
         form.lines._add_entry()
 
-    log.debug(form.errors)
-
-    return render_template("billing/invoice_form.html", form=form)
+    return render_template("invoice_form.html", form=form)
 
 
-@app.route("/get_hsn/<int:charge_id>")
+@invoice_bp.route("/get_hsn/<int:charge_id>")
 def get_hsn(charge_id=0):
     res = db.session.query(ChargeTypes).filter(ChargeTypes.id == charge_id).first()
 
@@ -266,12 +220,13 @@ def get_hsn(charge_id=0):
         return jsonify(-1)
 
 
-@app.route("/get_gst/<float:price>")
+@invoice_bp.route("/get_gst/<float:price>")
 def get_gst(price=0):
     return jsonify(calc_gst(price))
 
 
-@app.route("/printinvoice", methods=["POST"])
+@invoice_bp.route("/printinvoice", methods=["POST"])
+@login_required
 def printinvoice():
     """
     generate invoice data and pass to invoice.html
@@ -290,7 +245,8 @@ def printinvoice():
     return save_invoice(headers["id"])
 
 
-@app.route("/messages/<int:invoice_id>/delete", methods=["POST"])
+@invoice_bp.route("/messages/<int:invoice_id>/delete", methods=["POST"])
+@login_required
 def delete_invoice(invoice_id):
     db.session.query(InvoiceLines).filter(
         InvoiceLines.invoice_id == invoice_id
@@ -298,30 +254,29 @@ def delete_invoice(invoice_id):
     db.session.query(InvoiceHeaders).filter(InvoiceHeaders.id == invoice_id).delete()
     db.session.commit()
     flash("Invoice Deleted Succesfully!", "success")
-    return redirect(url_for("homepage"))
+    return redirect(url_for("main.homepage"))
 
 
-@app.route("/messages/<invoice_id>/save", methods=["GET", "POST"])
+@invoice_bp.route("/messages/<invoice_id>/save", methods=["GET", "POST"])
+@login_required
 def save_invoice(invoice_id):
 
     invoice_dict = gen_invoice(invoice_id)
 
     file = "Invoice " + invoice_dict["invoice_num"].replace("/", "-") + ".pdf"
 
-    html_out = render_template("billing/invoice.html", **invoice_dict)
+    html_out = render_template("invoice.html", **invoice_dict)
 
-    HTML(string=html_out).write_pdf(file, stylesheets=["./static/css/styles.css"])
+    HTML(string=html_out).write_pdf(file, stylesheets=["./project/invoice/static/css/styles.css"])
 
     return_data = io.BytesIO()
     with open(file, "rb") as fo:
         return_data.write(fo.read())
-    # (after writing, cursor will be at last byte, so move it to start)
     return_data.seek(0)
 
     os.remove(file)
 
     return send_file(return_data, mimetype="application/pdf", attachment_filename=file)
-
 
 def gen_invoice(invoice_id):
 
@@ -378,14 +333,9 @@ def gen_invoice(invoice_id):
         lines.append(data_line)
         count += 1
 
-    log.debug(lines)
     invoice_dict["lines"] = lines
 
     totals = get_totals(lines)
     invoice_dict.update(totals)
 
     return invoice_dict
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

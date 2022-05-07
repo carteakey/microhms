@@ -4,7 +4,7 @@
 
 {% block scripts %}
 {{super()}}
-<script src="{{ url_for('static', filename='/js/app.js') }}"></script>
+<script src="{{ url_for('invoice.static', filename='/js/app.js') }}"></script>
 {% endblock %}
 
 
@@ -13,7 +13,7 @@
 <div class="container">
 
   <h3 class="align-center"> BILLING ENTRY </h3>
-  <form method="POST" action="{{ url_for('invoice_form') }}" ,enctype="multipart/form-data" novalidate>
+  <form method="POST" action="{{ url_for('invoice.invoice_form') }}" ,enctype="multipart/form-data" novalidate>
 
     {{ form.csrf_token() }}
 
@@ -73,7 +73,7 @@
 
     <button type="submit" name='button' value='Submit' class="btn btn-primary">Submit</button>
 
-    <a class='btn btn-danger' href="{{ url_for('homepage') }}">Cancel</a>
+    <a class='btn btn-danger' href="{{ url_for('main.homepage') }}">Cancel</a>
 
 <br>
 <br>

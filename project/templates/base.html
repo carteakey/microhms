@@ -33,12 +33,13 @@
 
             
 
-            <a class='navbar-brand' href="{{ url_for('homepage') }}"> <img
+            <a class='navbar-brand' href="{{ url_for('main.homepage') }}"> <img
                     src="{{ url_for('static', filename='logo.png') }}" width="40" height="40" alt="">&nbsp;Hotel ABC</a>
 
             <div class="navbar-nav mr-auto">
-                {{ render_nav_item('invoice_form', 'Billing Entry') }}
-                {{ render_nav_item('invoice', 'Print Invoice') }}
+                {{ render_nav_item('invoice.invoice_form', 'Billing Entry') }}
+                {{ render_nav_item('invoice.invoice', 'Print Invoice') }}
+                {{ render_nav_item('login.logout', 'Logout') }}
             </div>
 
         </div>

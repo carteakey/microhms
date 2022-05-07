@@ -4,9 +4,9 @@
 {% block content %}
 <div class="container-fluid">
   <h3>Navigate to></h3>
-  <a class='btn btn-secondary' href="{{ url_for('invoice_form') }}">Billing Entry</a>
+  <a class='btn btn-secondary' href="{{ url_for('invoice.invoice_form') }}">Billing Entry</a>
       
-  <a class='btn btn-secondary' href="{{ url_for('invoice') }}">Print Invoice</a>
+  <a class='btn btn-secondary' href="{{ url_for('invoice.invoice') }}">Print Invoice</a>
   <br>
   <br>
 </div>

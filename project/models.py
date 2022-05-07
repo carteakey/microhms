@@ -1,9 +1,8 @@
-from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship,validates
+from flask_login import UserMixin
 
-
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 class Config(db.Model):
     __tablename__ = "config"
@@ -57,7 +56,8 @@ class InvoiceHeaders(db.Model):
 
     hotel = relationship("Hotels", backref="hotels")
     payment = relationship("PaymentModes", backref="payment_modes")
-    
+    db = SQLAlchemy()
+
     @validates('invoice_num', 'booking_id')
     def convert_upper(self, key, value):
         return value.upper()
@@ -146,3 +146,9 @@ class InvoiceLines(db.Model):
 
     def __repr__(self):
         return f"<id {self.id}>"
+
+
+class User(db.Model,UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    password = db.Column(db.String(150), nullable=False)

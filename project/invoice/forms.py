@@ -1,6 +1,7 @@
-from models import ChargeTypes, PaymentModes, Hotels
+from project.models import ChargeTypes, PaymentModes, Hotels
 from flask_wtf import FlaskForm, Form
 from wtforms.widgets import NumberInput
+
 
 from wtforms import (
     StringField,
@@ -15,7 +16,6 @@ from wtforms import (
 from wtforms.validators import InputRequired, Email
 from wtforms_sqlalchemy.fields import QuerySelectField
 from datetime import datetime
-
 
 class InvoiceLines(Form):
     def __init__(self, *args, **kwargs):
@@ -62,7 +62,9 @@ class InvoiceForm(FlaskForm):
     nights = IntegerField("Room Nights", widget=NumberInput(min=1, max=100))
     category = SelectField("Category", choices=["B2B", "B2C"])
 
-    hotel = QuerySelectField("Hotel", query_factory=lambda: Hotels.query, get_label="name")
+    hotel = QuerySelectField(
+        "Hotel", query_factory=lambda: Hotels.query, get_label="name"
+    )
 
     payment_mode = QuerySelectField(
         query_factory=lambda: PaymentModes.query, get_label="name"

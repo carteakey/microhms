@@ -1,8 +1,6 @@
 """
 Utility Functions
 """
-
-
 def get_totals(lines):
     """
     return total values from line dict.

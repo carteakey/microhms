@@ -18,7 +18,7 @@
 
   <h3>Print Invoice</h3>
   <hr>
-  <form method="POST" action="{{ url_for('printinvoice') }}">
+  <form method="POST" action="{{ url_for('invoice.printinvoice') }}">
     {{ form.csrf_token }}
 
     <div class="row">
@@ -28,15 +28,13 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Print</button>
-    <a class='btn btn-danger' href="{{ url_for('homepage') }}">Cancel</a>
+    <a class='btn btn-danger' href="{{ url_for('main.homepage') }}">Cancel</a>
 
   </form>
 
   <hr>
 
   <h3>Recent Invoices</h3>
-
-  <!-- edit_url =('invoice_form',[('invoice_id', ':id')]), -->
 
 
   {{
@@ -45,8 +43,8 @@
   titles=titles,
   show_actions=True,
   model=InvoiceHeaders,
-  delete_url =('delete_invoice',[('invoice_id', ':id')]),
-  custom_actions=[('save', 'save', ('save_invoice', [('invoice_id', ':id')]))]
+  delete_url =('invoice.delete_invoice',[('invoice_id', ':id')]),
+  custom_actions=[('save', 'save', ('invoice.save_invoice', [('invoice_id', ':id')]))]
   )
   }}
 
