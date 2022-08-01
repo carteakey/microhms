@@ -1,0 +1,154 @@
+{% extends "base.html" %} {% from 'bootstrap5/form.html' import
+render_field,render_form_row %} {% from 'bootstrap5/table.html' import
+render_table %} {% block scripts %} {{super()}}
+<script src="{{ url_for('invoice.static', filename='js/app.js') }}"></script>
+{% endblock %} {% block content %}
+
+<div class="container">
+  <h3>Billing Entry</h3>
+  <hr />
+  <form
+    method="POST"
+    action="{{ url_for('invoice.invoice_form') }}"
+    ,enctype="multipart/form-data"
+    novalidate
+  >
+
+    {{ form.csrf_token() }} 
+    {{
+    render_form_row(
+      [form.hotel,
+       form.invoice_num,
+       form.invoice_date,
+       form.booking_id,
+       form.booking_date],
+       col_map={'hotel': 'col-md-2',
+                'invoice_num': 'col-md-2',
+                'invoice_date': 'col-md-2',
+                'booking_id': 'col-md-2',
+                'booking_date': 'col-md-2'
+            }
+       )
+    }} 
+    {{
+    render_form_row(
+      [ form.payee,
+        form.guest,
+        form.gstin,
+        form.category,
+        form.rooms],
+    col_map={'payee': 'col-md-2',
+             'guest': 'col-md-2',
+             'gstin': 'col-md-2',
+             'category': 'col-md-2',
+             'rooms': 'col-md-2'
+            }
+             ) 
+    }} 
+    {{
+    render_form_row([form.arrive,form.depart,form.nights,form.guest_details],
+    col_map={'arrive': 'col-md-2','depart': 'col-md-2','nights': 'col-md-2'}) 
+    }} 
+
+    <hr />
+
+    <div class="table-responsive">
+      <table 
+      id="data" 
+      data-toggle="table"
+      data-mobile-responsive="true"
+      >
+        <thead>
+          <tr>
+            <th>Particulars</th>
+            <th>HSN/SAC</th>
+            <th>Stay Date</th>
+            <th>Sell Rate</th>
+            <th>Incl.</th>
+            <th>Sub Total</th>
+            <th>CGST</th>
+            <th>SGST</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for line in form.lines %}
+          <tr>
+            <td>
+              {{ render_field(line.particulars,form_type='inline', class=
+              'form-control', onblur="populate()" )}}
+            </td>
+            <td>
+              {{ render_field(line.hsnsac,
+              form_type='inline',class='form-control') }}
+            </td>
+            <td>
+              {{ render_field(line.stay_date,
+              form_type='inline',class='form-control') }}
+            </td>
+            <td>
+              {{ render_field(line.sell_rate,
+              form_type='inline',class='form-control', onblur="populate()") }}
+            </td>
+            <td>
+              {{ render_field(line.inclusion,
+              form_type='inline',class='form-control', onblur="populate()") }}
+            </td>
+            <td>
+              {{ render_field(line.subtotal, form_type='inline',class='subtotal
+              form-control', onblur="populate()") }}
+            </td>
+            <td>
+              {{ render_field(line.cgst,
+              form_type='inline',class='form-control') }}
+            </td>
+            <td>
+              {{ render_field(line.sgst,
+              form_type='inline',class='form-control') }}
+            </td>
+            <td>
+              {{ render_field(line.total,
+              form_type='inline',class='form-control') }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <button
+      type="submit"
+      name="button"
+      value="Add Line"
+      class="btn btn-secondary"
+    >
+      +
+    </button>
+    <button
+      type="submit"
+      name="button"
+      value="Delete Line"
+      class="btn btn-secondary float-end"
+    >
+      -
+    </button>
+
+    <hr />
+
+    {{ render_form_row([form.payment_mode,form.tpr,form.npa],
+    col_map={'payment_mode': 'col-md-2','tpr': 'col-md-2','npa': 'col-md-2'}) }}
+
+    <hr />
+
+    <button type="submit" name="button" value="Submit" class="btn btn-primary">
+      Submit
+    </button>
+
+    <a class="btn btn-danger" href="{{ url_for('main.homepage') }}">Cancel</a>
+
+    <br />
+    <br />
+  </form>
+</div>
+
+{% endblock %}

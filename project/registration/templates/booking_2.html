@@ -1,0 +1,149 @@
+{% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
+{% block content %}
+
+{% block scripts %}
+{{super()}}
+<script>
+  $(document).ready(function() {
+      $('#tariff').keyup(function(ev) {
+          var total_incl_gst = $('#tariff').val() * 1;
+          var total_excl_gst = Math.round(total_incl_gst / 1.12, 2);
+          var gst = total_incl_gst - total_excl_gst;
+          var gstobj = document.getElementById('gst');
+          var exclobj = document.getElementById('tariff_wo_gst');
+          gstobj.value = gst;
+          exclobj.value = total_excl_gst;
+      });
+  });
+</script>
+{% endblock %}
+
+
+<div class="container">
+  <h3>Guest Registration</h3>
+  <hr />
+
+  <div style="text-align: right">
+    <br />
+    <h5>Seq: {{seq}}</h5>
+  </div>
+  
+  <form
+    method="POST"
+    action="{{ url_for('registration.booking_2') }}"
+    enctype="multipart/form-data"
+  >
+    {{ form.csrf_token() }} {% if existing %}
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.mobile, readonly=true, class='form-control',
+        placeholder='Mobile') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.first_name, readonly=true, class='form-control',
+        placeholder='First name') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.last_name, readonly=true, class='form-control',
+        placeholder='Last Name') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.email, readonly=true, class='form-control',
+        placeholder='Email') }}
+      </div>
+    </div>
+
+    {% else %}
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.mobile, readonly=true, class='form-control',
+        placeholder='Mobile') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.first_name, class='form-control',
+        placeholder='First name') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.last_name, class='form-control', placeholder='Last name') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.email, class='form-control', placeholder='Email')
+        }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.docs, accept="image/*", class='form-control',
+        placeholder='Guest ID') }}
+      </div>
+    </div>
+
+    {% endif %}
+
+    <hr />
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.hotel, class='form-control',placeholder='Hotel') }}
+      </div>
+
+      <div class="form-group col-md-2">
+        {{ render_field(form.guests, class='form-control', placeholder='Total Guests') }}
+      </div>
+
+      <div class="form-group col-md-2">
+        {{ render_field(form.room, class='form-control', placeholder='Room No')
+        }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.booking_source, class='form-control',
+        placeholder='Source') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.tariff, id = 'tariff' ,class='form-control', placeholder='Tariff (incl. GST)')
+        }}
+      </div>
+      <div class="form-group col-md-3">
+        {{ render_field(form.gst, id = 'gst', class='form-control',readonly=true, placeholder='GST')
+        }}
+      </div>
+      <div class="form-group col-md-3">
+        {{ render_field(form.tariff_wo_gst, id = 'tariff_wo_gst' , class='form-control',readonly=true, placeholder='Tariff (excl. GST)')
+        }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.checkin, class= 'form-control',
+        placeholder='Check-in Date') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.checkout, class= 'form-control',
+        placeholder='Check-Out Date') }}
+      </div>
+    </div>
+
+    <hr />
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <a class="btn btn-danger" href="{{ url_for('main.homepage') }}">Cancel</a>
+
+    <div style="text-align: right">
+      <br />
+      <h5>Page 2 of 2</h5>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="UTF-8" />
+    <title>{{ title }}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+
+  <body>
+    <p style="float: left">
+      <img alt="" src="{{ image_path }}" style="height: 100px" />
+    </p>
+    <p>&nbsp;</p>
+    {% if payment_mode == 'Not Paid' %}
+
+    <span
+      style="
+        margin: auto;
+        display: table;
+        font-size: 20px;
+        color: red;
+        font-weight: bold;
+      "
+    >
+      {{ payment_mode }}
+    </span>
+
+    {% endif %}
+
+    <p style="text-align: right; line-height: 150%">
+      {{ company_name }} <br />
+      {{ address }} <br />
+      Email: {{ email }} <br />
+      Ph: {{ phone }}
+    </p>
+    <p>&nbsp;</p>
+
+    <p style="text-align: center"><b>Bill of Supply / Tax Invoice</b></p>
+
+    <hr />
+
+    <table style="float: left">
+      <tbody>
+        <tr>
+          <td>&nbsp;</td>
+          <td>To Payee:</td>
+          <td>{{ payee }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>GSTIN:</td>
+          <td>{{ guest_gstin }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>{{ guest_details if guest_details}}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>{{ address_1 }}</td>
+        </tr>
+        <tr>
+          <td>{{ address_2 }}</td>
+        </tr>
+        <tr>
+          <td>{{ address_3 }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>Guest Name:</td>
+          <td>{{ guest }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table style="float: right">
+      <tbody>
+        <tr>
+          <td>Invoice Date:</td>
+          <td>{{ invoice_date }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Invoice #:</td>
+          <td>{{ invoice_num }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Booking ID:</td>
+          <td>{{ booking_id }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Booking Date:</td>
+          <td>{{ booking_date }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Arrive:</td>
+          <td>{{ arrive }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Depart:</td>
+          <td>{{ depart }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>No of Rooms:</td>
+          <td>{{ rooms }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Room Nights:</td>
+          <td>{{ nights }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Hotel Name:</td>
+          <td>{{ hotel }}</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>Category:</td>
+          <td>{{ category }}</td>
+          <td>&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="clear: both"></div>
+    <br />
+    <br />
+
+    <table style="width: 100%">
+      <thead>
+        <tr>
+          <th>S No.</th>
+          <th>Particulars</th>
+          <th>Stay Date</th>
+          <th>Sell Rate</th>
+          <th>HSN/SAC</th>
+          <th>Inclusion</th>
+          <th>Sub Total</th>
+          <th>CGST</th>
+          <th>SGST</th>
+          <th>AMOUNT</th>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+      </thead>
+
+      <tbody id="lines">
+        {% for line in lines %}
+        <tr>
+          <td>{{ line.no }}</td>
+          <td>{{ line.particulars }}</td>
+          <td>{{ line.stay_date }}</td>
+          <td>₹{{ line.sell_rate }}</td>
+          <td>{{ line.hsnsac }}</td>
+          <td>₹{{ line.inclusion }}</td>
+          <td>₹{{ line.subtotal }}</td>
+          <td>{{ line.cgst }}</td>
+          <td>{{ line.sgst }}</td>
+          <td>₹{{ line.total }}</td>
+        </tr>
+        {% endfor %}
+
+        <tr>
+          <td></td>
+        </tr>
+
+        <tr id="total">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td><b>₹{{ total_inclusion }}</b></td>
+          <td><b>₹{{ total_subtotal }}</b></td>
+          <td><b>₹{{ total_cgst }}</b></td>
+          <td><b>₹{{ total_sgst }}</b></td>
+          <td><b>₹{{ total_amount }}</b></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br />
+    <br />
+
+    <table style="float: left">
+      <tbody>
+        <tr>
+          <td>&nbsp;</td>
+          <td>Payment Mode:</td>
+          <td>{{ payment_mode }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>Total Payment Received:</td>
+          <td>₹{{ tpr }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>Net Payable Amount:</td>
+          <td>₹{{ npa }}</td>
+        </tr>
+
+        <tr>
+          <td>&nbsp;</td>
+          <td>Total Tax:</td>
+          <td>₹{{ total_tax }} (12% Room Rent & 5% Food Beverage)</td>
+        </tr>
+
+        <tr>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>&nbsp;</td>
+          <td>PAN No.:</td>
+          <td>{{ pan }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>GSTIN:</td>
+          <td>{{ gstin }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>GST Legal Name:</td>
+          <td>{{ company_name }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>Accounting Code of Services:</td>
+          <td>{{ acs }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>Hotel Address:</td>
+          <td>
+            <div style="overflow-wrap: break-word; max-width: 300px">
+              {{ hotel_address }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="text-align: right">E&O.E</p>
+
+    <p style="float: right">
+      <img alt="" src="{{ sign }}" style="height: 70px" /><br />
+      <b> Authorized Signatory</b>
+    </p>
+    <div style="clear: both"></div>
+    <br />
+    <br />
+    <!-- <p style="text-align: center;">* This is a computer generated invoice and therefore signature and stamp are not
+        required</p> -->
+    <hr />
+  </body>
+</html>
