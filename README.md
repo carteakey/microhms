@@ -1,8 +1,10 @@
 # MicroHMS
 
+A sample application can be found here https://microhms.herokuapp.com
+
 ### Features
 - Create Bookings, send Booking acknowledgements via email (Mailgun)
-- Verify guests via 2FA (OTP on mobile) 
+- Store guest details & identification and verify through Mobile OTP
 - Role based access to functionality (Admin/User)
 - Create and manage billing entries
 - Generate professional invoices via inbuilt template
@@ -10,6 +12,7 @@
 ### Getting Started
 - Setup database (heroku-postgresql hobby-dev is a great free option)
 - Add database URL to .env file (example provided)
+- Setup API keys in .env file as per need.
 - Setup a local environment
 ```bash
 python3 -m venv env
@@ -39,18 +42,19 @@ heroku git:remote -a yourappname
 git push heroku main
 ```
 
+### Screenshots
+| | | |
+|:-------------------------:|:-------------------------:|:-------------------------:|
+|![Homepage](/screenshots/homepage.png) Homepage |![Guest Verification](/screenshots/guest_verification.png) Guest Verification | ![Booking](/screenshots/guest_registration.png) Booking|
+|![Billing Entry](/screenshots/billing_entry.png) Billing Entry |![Manage Invoices](/screenshots/print_invoice.png) Manage Invoices | ![Sample Invoice](/screenshots/sample_invoice.png) Sample Invoice|
+|![Register User](/screenshots/user_register.png) Register User |![Login](/screenshots/user_login.png) Login | |
+
 ### Some things to note
-- Mailgun and MSG91 API's are used for Email and OTP respectively. These can be replaced by alternatives in project.util.py.
-- Setup API keys in .env file as per need (The transactions will not fail if the API's fail, and that is by design.)
-- Guest Registration / Booking page requires an OTP to verify the guest first, for testing purposes 1000 value will bypass this page. MAKE SURE TO REMOVE THIS LATER.
+- Mailgun and MSG91 API's are used for Email and OTP respectively. These can be replaced by alternatives in `util.py`.
 
+- Booking page requires an OTP to verify the guest first, for testing purposes 1000 value will bypass this page. **MAKE SURE TO REMOVE THIS LATER.**
 
-![ER Diagram](er_diagram.png)
 
 To be added in future releases
-- Initialization script for easy setup
 - Page to edit invoices
 - Page to manage bookings
-
-A sample application can be found here
-https://microhms.herokuapp.com
