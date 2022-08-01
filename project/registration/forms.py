@@ -5,7 +5,8 @@ from wtforms import (
     StringField,
     DateField,
     IntegerField,
-    MultipleFileField
+    MultipleFileField,
+    TimeField
 )
 
 from wtforms.validators import InputRequired, Email
@@ -49,6 +50,7 @@ class BookingForm(FlaskForm):
 
 
     checkin = DateField("Check-in Date", validators=[InputRequired()])
+    checkin_time = TimeField("Check-in Time", validators=[InputRequired()])
     checkout = DateField("Check-out Date", validators=[InputRequired()])
 
     booking_source = QuerySelectField(

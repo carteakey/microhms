@@ -116,6 +116,7 @@ def booking_2():
         booking_source_id = request.form["booking_source"]
         operator = current_user.username
         and_register_serial_no = form.and_register_serial_no.data
+        checkin_time = form.checkin_time.data
 
         booking = Bookings(
             guest.id,
@@ -129,7 +130,8 @@ def booking_2():
             tariff_wo_gst,
             booking_source_id,
             operator,
-            and_register_serial_no
+            and_register_serial_no,
+            checkin_time
         )
         db.session.add(booking)
         db.session.commit()
@@ -150,6 +152,7 @@ def booking_2():
                 "hotel": booking.hotel.name,
                 "room": booking.room,
                 "checkin": booking.checkin,
+                "checkin_time": booking.checkin_time,
                 "checkout": booking.checkout,
                 "tariff": booking.tariff,
                 "gst": booking.gst,
@@ -228,8 +231,9 @@ def bookings_today_data():
     g."mobile" "Guest Mobile",
     g."email" "Guest Email",
     b.room "Room",
-    b.checkin "Check-in Date",
-    b.checkout "Check-out Date",
+    TO_CHAR(b.checkin, 'DD-MM-YYYY') "Check-in Date",
+    b.checkin_time "Check-in Time",
+    TO_CHAR(b.checkout, 'DD-MM-YYYY') "Check-out Date",
     b.tariff "Tariff",
     b.gst "GST",
     b.tariff_wo_gst "Tariff w/o GST",

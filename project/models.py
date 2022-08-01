@@ -190,6 +190,7 @@ class Bookings(db.Model):
     booking_source_id = db.Column(db.Integer, db.ForeignKey("booking_sources.id"))
     operator = db.Column(db.String())
     and_register_serial_no  = db.Column(db.Integer)
+    checkin_time = db.Column(db.Time())
 
     hotel = db.relationship("Hotels", backref=db.backref("bookings", lazy="dynamic"))
     booking_source = db.relationship("BookingSources", backref=db.backref("bookings", lazy="dynamic"))
@@ -207,7 +208,8 @@ class Bookings(db.Model):
         tariff_wo_gst,
         booking_source_id,
         operator,
-        and_register_serial_no
+        and_register_serial_no,
+        checkin_time
     ):
         self.guest_id = guest_id
         self.guests = guests
@@ -220,7 +222,8 @@ class Bookings(db.Model):
         self.tariff_wo_gst= tariff_wo_gst
         self.booking_source_id = booking_source_id
         self.operator = operator
-        self.and_register_serial_no = and_register_serial_no
+        self.and_register_serial_no = and_register_serial_no,
+        self.checkin_time = checkin_time
 
     def __repr__(self):
         return f"<id {self.id}>"

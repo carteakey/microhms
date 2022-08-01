@@ -55,6 +55,12 @@
         {{ render_field(form.email, readonly=true, class='form-control',
         placeholder='Email') }}
       </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.docs, accept="image/*", class='form-control',
+        placeholder='Guest ID') }}
+      </div>
+      
     </div>
 
     {% else %}
@@ -127,6 +133,11 @@
         placeholder='Check-in Date') }}
       </div>
 
+      <div class="form-group col-md-3">
+        {{ render_field(form.checkin_time, class= 'form-control',
+        placeholder='Check-in Time') }}
+      </div>
+      
       <div class="form-group col-md-3">
         {{ render_field(form.checkout, class= 'form-control',
         placeholder='Check-Out Date') }}
