@@ -97,6 +97,8 @@ def booking_2():
             db.session.add(guest)
             db.session.flush()
 
+        if request.files.getlist("docs"):
+
             files = request.files.getlist("docs")
 
             for file in files:
@@ -104,7 +106,6 @@ def booking_2():
                 file.seek(0) #Fuuuuuuuck
                 db.session.add(doc)
                 db.session.flush()
-
 
         guests = form.guests.data
         hotel_id = request.form["hotel"]
