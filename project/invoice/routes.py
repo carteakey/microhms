@@ -65,12 +65,12 @@ def invoice_form_data():
  "Invoice Num", 
  TO_CHAR(
         "Invoice Date",
-        'Mon-DD-YYYY'
+        'DD-MM-YYYY'
     )  "Invoice Date",
  "Booking ID", 
   TO_CHAR(
         "Booking Date",
-        'Mon-DD-YYYY'
+        'DD-MM-YYYY'
     )  "Booking Date",
  "Hotel", 
  "Payee",

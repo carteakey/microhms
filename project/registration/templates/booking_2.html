@@ -1,23 +1,10 @@
-{% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
+{% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field,render_form_row %}
 {% block content %}
 
 {% block scripts %}
 {{super()}}
-<script>
-  $(document).ready(function() {
-      $('#tariff').keyup(function(ev) {
-          var total_incl_gst = $('#tariff').val() * 1;
-          var total_excl_gst = Math.round(total_incl_gst / 1.12, 2);
-          var gst = total_incl_gst - total_excl_gst;
-          var gstobj = document.getElementById('gst');
-          var exclobj = document.getElementById('tariff_wo_gst');
-          gstobj.value = gst;
-          exclobj.value = total_excl_gst;
-      });
-  });
-</script>
+<script src="{{ url_for('registration.static', filename='js/app.js') }}"></script>
 {% endblock %}
-
 
 <div class="container">
   <h3>Guest Registration</h3>
@@ -60,7 +47,7 @@
         {{ render_field(form.docs, accept="image/*", class='form-control',
         placeholder='Guest ID') }}
       </div>
-      
+
     </div>
 
     {% else %}
@@ -97,6 +84,10 @@
     <div class="row">
       <div class="form-group col-md-3">
         {{ render_field(form.hotel, class='form-control',placeholder='Hotel') }}
+      </div>
+
+      <div class="form-group col-md-3">
+        {{ render_field(form.and_register_serial_no, class='form-control', placeholder='A&D Register Serial #') }}
       </div>
 
       <div class="form-group col-md-2">
@@ -144,6 +135,20 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="form-group col-md-3">
+        {{ render_field(form.payment_mode, id = 'payment_mode' ,class='form-control', placeholder='Payment Mode')
+        }}
+      </div>
+      <div class="form-group col-md-3">
+        {{ render_field(form.tpr, id = 'tpr', class='form-control', placeholder='Total Payment Received')
+        }}
+      </div>
+      <div class="form-group col-md-3">
+        {{ render_field(form.npa, id = 'npa' , class='form-control', placeholder='Net Payable Amount')
+        }}
+      </div>
+    </div>
     <hr />
 
     <button type="submit" class="btn btn-primary">Submit</button>

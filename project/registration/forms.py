@@ -12,7 +12,7 @@ from wtforms import (
 from wtforms.validators import InputRequired, Email
 from wtforms_sqlalchemy.fields import QuerySelectField
 
-from project.models import BookingSources, Hotels
+from project.models import BookingSources, Hotels, PaymentModes
 
 
 class NumberForm(FlaskForm):
@@ -34,7 +34,7 @@ class BookingForm(FlaskForm):
 
     docs = MultipleFileField("Guest ID", validators=[InputRequired()])
 
-    and_register_serial_no = IntegerField("AND Register Serial #", validators=[InputRequired()])
+    and_register_serial_no = IntegerField("A&D Register Serial #", validators=[InputRequired()])
 
     hotel = QuerySelectField(
         "Hotel", query_factory=lambda: Hotels.query, get_label="name"
@@ -56,3 +56,9 @@ class BookingForm(FlaskForm):
     booking_source = QuerySelectField(
         "Booking Source", query_factory=lambda: BookingSources.query, get_label="name"
     )
+
+    payment_mode = QuerySelectField(
+        query_factory=lambda: PaymentModes.query, get_label="name"
+    )
+    tpr = IntegerField("Total Payment Received",validators=[InputRequired()])
+    npa = IntegerField("Net Payable Amount",validators=[InputRequired()])

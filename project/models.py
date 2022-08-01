@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, validates
 from flask_login import UserMixin
@@ -191,9 +192,14 @@ class Bookings(db.Model):
     operator = db.Column(db.String())
     and_register_serial_no  = db.Column(db.Integer)
     checkin_time = db.Column(db.Time())
+    payment_mode_id = db.Column(db.Integer, db.ForeignKey("payment_modes.id"))
+    tpr = db.Column(db.Numeric(10, 2))
+    npa = db.Column(db.Numeric(10, 2))
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     hotel = db.relationship("Hotels", backref=db.backref("bookings", lazy="dynamic"))
     booking_source = db.relationship("BookingSources", backref=db.backref("bookings", lazy="dynamic"))
+    payment_mode = db.relationship("PaymentModes", backref=db.backref("bookings", lazy="dynamic"))
 
     def __init__(
         self,
@@ -209,7 +215,11 @@ class Bookings(db.Model):
         booking_source_id,
         operator,
         and_register_serial_no,
-        checkin_time
+        checkin_time,
+        payment_mode_id,
+        tpr,
+        npa,
+        date_created
     ):
         self.guest_id = guest_id
         self.guests = guests
@@ -224,6 +234,10 @@ class Bookings(db.Model):
         self.operator = operator
         self.and_register_serial_no = and_register_serial_no,
         self.checkin_time = checkin_time
+        self.payment_mode_id = payment_mode_id
+        self.tpr = tpr
+        self.npa = npa,
+        self.date_created = date_created
 
     def __repr__(self):
         return f"<id {self.id}>"

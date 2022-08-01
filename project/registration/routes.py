@@ -1,4 +1,4 @@
-import imp
+from datetime import datetime
 import json
 import os
 from project.registration.forms import BookingForm, NumberForm
@@ -37,6 +37,7 @@ def clear_session():
 
 registration_bp = Blueprint(
     "registration", __name__, template_folder="templates", static_folder="static"
+    , static_url_path="/registration/static"
 )
 
 # Loggger
@@ -118,6 +119,11 @@ def booking_2():
         and_register_serial_no = form.and_register_serial_no.data
         checkin_time = form.checkin_time.data
 
+        payment_mode_id = form.payment_mode.data
+        tpr = form.tpr.data
+        npa = form.npa.data
+        date_created = datetime.utcnow()
+        
         booking = Bookings(
             guest.id,
             guests,
@@ -131,7 +137,11 @@ def booking_2():
             booking_source_id,
             operator,
             and_register_serial_no,
-            checkin_time
+            checkin_time,
+            payment_mode_id,
+            tpr,
+            npa,
+            date_created
         )
         db.session.add(booking)
         db.session.commit()
@@ -160,8 +170,12 @@ def booking_2():
                 "booking_source": booking.booking_source.name,
                 "operator": booking.operator,
                 "new_guest": new_guest,
+                "and_register_serial_no": booking.and_register_serial_no,
+                "payment_mode": booking.payment_mode.name,
+                "tpr": booking.tpr,
+                "npa": booking.npa
             },default = str),
-            guest.email+','+os.environ["ADMIN_EMAIL"],
+            os.environ.get("ADMIN_EMAIL"),
             files
         )
         
@@ -212,7 +226,6 @@ def sendotp():
         form = NumberForm()
         return render_template("booking_1.html", form=form)
 
-
 @registration_bp.route("/bookings_today", methods=["GET"])
 @login_required
 def bookings_today():
@@ -225,30 +238,35 @@ def bookings_today_data():
     result = db.session.execute(
         """SELECT
     b.ID "SEQ",
-    b.and_register_serial_no "AND Register Serial No",
+    b.and_register_serial_no "A&D Register Serial No",
     h.name "Hotel",
     g ."first_name" || ' ' || g ."last_name" "Guest Name",
     g."mobile" "Guest Mobile",
     g."email" "Guest Email",
     b.room "Room",
-    TO_CHAR(b.checkin, 'DD-MM-YYYY') "Check-in Date",
-    b.checkin_time "Check-in Time",
-    TO_CHAR(b.checkout, 'DD-MM-YYYY') "Check-out Date",
+    TO_CHAR(b.checkin,'DD-MM-YYYY') "Check-in Date",
+    TO_CHAR(b.checkin_time,'HH24:MI') "Check-in Time",
+    TO_CHAR(b.checkout,'DD-MM-YYYY') "Check-out Date",
     b.tariff "Tariff",
     b.gst "GST",
     b.tariff_wo_gst "Tariff w/o GST",
     bs.Name "Booking Source",
-    b.operator "Operator"
+    b.operator "Operator",
+    pm.name "Payment Mode",
+    b.tpr "Total Payment Received",
+    b.npa "Net Payable Amount"
 FROM
     BOOKINGS b,
     guests g,
     booking_sources bs,
-    hotels h
+    hotels h,
+    payment_modes pm
 WHERE
     b.guest_id = g."id"
     AND b.hotel_id = h.id
     AND b.booking_source_id = bs.id
     AND b.checkin = CURRENT_DATE
+    AND b.payment_mode_id = pm.id
 ORDER BY b.ID ASC"""
     ).fetchall()
     return {"data": [dict(row) for row in result]}
