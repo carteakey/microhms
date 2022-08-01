@@ -99,7 +99,7 @@ def register():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+        new_user = User(username=form.username.data, password=hashed_password,active=True)
 
         db.session.add(new_user)
         db.session.commit()
