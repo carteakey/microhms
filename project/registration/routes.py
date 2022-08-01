@@ -119,7 +119,7 @@ def booking_2():
         and_register_serial_no = form.and_register_serial_no.data
         checkin_time = form.checkin_time.data
 
-        payment_mode_id = form.payment_mode.data
+        payment_mode_id = request.form["payment_mode"]
         tpr = form.tpr.data
         npa = form.npa.data
         date_created = datetime.utcnow()
