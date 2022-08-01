@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
+{% from 'bootstrap5/table.html' import render_table %} {% block styles %}
+{{super()}}
+{% endblock %} {% block content %} {% block scripts %} {% endblock %}
+
+<div class="container">
+  <h3>Today's Bookings</h3>
+</div>
+
+<table
+  id="table"
+  data-toggle="table"
+  data-search="true"
+  data-pagination="true"
+  data-ajax="ajaxRequest"
+  show-search="true"
+  >
+  <thead>
+    <tr>
+      <th data-field="SEQ" data-sortable="true">SEQ</th>
+      <th data-field="AND Register Serial No" data-sortable="true">AND Register Serial No</th>
+      <th data-field="Hotel" data-sortable="true">Hotel</th>
+      <th data-field="Guest Name" data-sortable="true">Guest Name</th>
+      <th data-field="Guest Mobile" data-sortable="true">Guest Mobile</th>
+      <th data-field="Guest Email" data-sortable="true">Guest Email</th>
+      <th data-field="Room" data-sortable="true">Room</th>
+      <th data-field="Check-in Date" data-sortable="true">Check-in Date</th>
+      <th data-field="Check-out Date" data-sortable="true">Check-out Date</th>
+      <th data-field="Tariff" data-sortable="true">Tariff</th>
+      <th data-field="GST" data-sortable="true">GST</th>
+      <th data-field="Tariff w/o GST" data-sortable="true">Tariff w/o GST</th>
+      <th data-field="Booking Source" data-sortable="true">Booking Source</th>
+      <th data-field="Operator" data-sortable="true">Operator</th>
+    </tr>
+  </thead>
+</table>
+
+<script>
+  
+  function ajaxRequest(params) {
+    var url= "/bookings_today/data";
+    $.get(url).then(function (res) {
+      params.success(res.data)
+    })
+  }
+
+</script>
+
+{% endblock %}

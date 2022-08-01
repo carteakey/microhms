@@ -208,3 +208,43 @@ def sendotp():
 
         form = NumberForm()
         return render_template("booking_1.html", form=form)
+
+
+@registration_bp.route("/bookings_today", methods=["GET"])
+@login_required
+def bookings_today():
+    return render_template("bookings_today.html")
+
+@registration_bp.route("/bookings_today/data")
+@login_required
+def bookings_today_data():
+
+    result = db.session.execute(
+        """SELECT
+    b.ID "SEQ",
+    b.and_register_serial_no "AND Register Serial No",
+    h.name "Hotel",
+    g ."first_name" || ' ' || g ."last_name" "Guest Name",
+    g."mobile" "Guest Mobile",
+    g."email" "Guest Email",
+    b.room "Room",
+    b.checkin "Check-in Date",
+    b.checkout "Check-out Date",
+    b.tariff "Tariff",
+    b.gst "GST",
+    b.tariff_wo_gst "Tariff w/o GST",
+    bs.Name "Booking Source",
+    b.operator "Operator"
+FROM
+    BOOKINGS b,
+    guests g,
+    booking_sources bs,
+    hotels h
+WHERE
+    b.guest_id = g."id"
+    AND b.hotel_id = h.id
+    AND b.booking_source_id = bs.id
+    AND b.checkin = CURRENT_DATE
+ORDER BY b.ID ASC"""
+    ).fetchall()
+    return {"data": [dict(row) for row in result]}
