@@ -1,6 +1,6 @@
 # MicroHMS
 
-A sample application can be found here https://microhms.herokuapp.com
+A sample application can be found here https://microhms.herokuapp.com (admin / admin@123)
 
 ### Features
 - Create Bookings, send Booking acknowledgements via email (Mailgun)
