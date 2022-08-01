@@ -41,6 +41,8 @@ This can be deployed to heroku easily using the existing procfile
 heroku git:remote -a yourappname
 git push heroku main
 ```
+Setup environment variables
+![Config](/screenshots/config_vars.png) 
 
 ### Screenshots
 | | | |
