@@ -68,7 +68,7 @@ def send_email(subject,variables,to,attachments=None):
             
     res = requests.post(
 		"https://api.mailgun.net/v3/mg.vizima.in/messages",
-		auth=("api", os.environ["MAILGUN_API_KEY"]),
+		auth=("api", os.environ.get("MAILGUN_API_KEY")),
         files = files if attachments else None,
 		data={"from": "New Booking <bookings@"+os.environ["MAILGUN_DOMAIN"]+">",
 			"to": to,
