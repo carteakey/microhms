@@ -185,12 +185,12 @@ class Bookings(db.Model):
     room = db.Column(db.String())
     checkin = db.Column(db.Date())
     checkout = db.Column(db.Date())
-    tariff =db.Column(db.Numeric(10, 2))
+    tariff = db.Column(db.Numeric(10, 2))
     gst = db.Column(db.Numeric(10, 2))
     tariff_wo_gst = db.Column(db.Numeric(10, 2))
     booking_source_id = db.Column(db.Integer, db.ForeignKey("booking_sources.id"))
     operator = db.Column(db.String())
-    and_register_serial_no  = db.Column(db.Integer)
+    and_register_serial_no = db.Column(db.Integer)
     checkin_time = db.Column(db.Time())
     payment_mode_id = db.Column(db.Integer, db.ForeignKey("payment_modes.id"))
     tpr = db.Column(db.Numeric(10, 2))
@@ -198,8 +198,12 @@ class Bookings(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     hotel = db.relationship("Hotels", backref=db.backref("bookings", lazy="dynamic"))
-    booking_source = db.relationship("BookingSources", backref=db.backref("bookings", lazy="dynamic"))
-    payment_mode = db.relationship("PaymentModes", backref=db.backref("bookings", lazy="dynamic"))
+    booking_source = db.relationship(
+        "BookingSources", backref=db.backref("bookings", lazy="dynamic")
+    )
+    payment_mode = db.relationship(
+        "PaymentModes", backref=db.backref("bookings", lazy="dynamic")
+    )
 
     def __init__(
         self,
@@ -219,7 +223,7 @@ class Bookings(db.Model):
         payment_mode_id,
         tpr,
         npa,
-        date_created
+        date_created,
     ):
         self.guest_id = guest_id
         self.guests = guests
@@ -228,19 +232,20 @@ class Bookings(db.Model):
         self.checkin = checkin
         self.checkout = checkout
         self.tariff = tariff
-        self.gst = gst,
-        self.tariff_wo_gst= tariff_wo_gst
+        self.gst = gst
+        self.tariff_wo_gst = tariff_wo_gst
         self.booking_source_id = booking_source_id
         self.operator = operator
-        self.and_register_serial_no = and_register_serial_no,
+        self.and_register_serial_no = and_register_serial_no
         self.checkin_time = checkin_time
         self.payment_mode_id = payment_mode_id
         self.tpr = tpr
-        self.npa = npa,
+        self.npa = npa
         self.date_created = date_created
 
     def __repr__(self):
         return f"<id {self.id}>"
+
 
 class Documents(db.Model):
     __tablename__ = "documents"
@@ -258,6 +263,7 @@ class Documents(db.Model):
     def __repr__(self):
         return f"<id {self.id}>"
 
+
 class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -265,7 +271,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150), nullable=False)
     active = db.Column(db.Boolean, default=True, nullable=False)
 
-    def __init__(self, username, password,active):
+    def __init__(self, username, password, active):
         self.username = username
         self.password = generate_password_hash(password)
         self.active = active
@@ -284,7 +290,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def create(name, password, active=True):
-        rv = User(name,password,active)
+        rv = User(name, password, active)
         db.session.add(rv)
         db.session.commit()
         return rv
@@ -331,8 +337,12 @@ class RoleAssignment(db.Model):
     # Why was unique=True?
 
     # For ease of use, I have left lazy's as 'joined'. You shouldn't do this unless you mean to.
-    role = db.relationship('Role', backref=db.backref('role_assignments', lazy='joined'), lazy='joined')
-    user = db.relationship('User', backref=db.backref('role_assignments', lazy='joined'), lazy='joined')
+    role = db.relationship(
+        "Role", backref=db.backref("role_assignments", lazy="joined"), lazy="joined"
+    )
+    user = db.relationship(
+        "User", backref=db.backref("role_assignments", lazy="joined"), lazy="joined"
+    )
 
     def __init__(self, role_name, user_id):
         self.role_name = role_name

@@ -61,24 +61,21 @@ def invoice():
 def invoice_form_data():
 
     result = db.session.execute(
-        """select "ID",
- "Invoice Num", 
- TO_CHAR(
-        "Invoice Date",
-        'DD-MM-YYYY'
-    )  "Invoice Date",
- "Booking ID", 
-  TO_CHAR(
-        "Booking Date",
-        'DD-MM-YYYY'
-    )  "Booking Date",
- "Hotel", 
- "Payee",
- "Guest", 
- "Guest Details", 
- "Total"
- from invoices_v
- order by 1 desc"""
+        """select
+    "ID",
+    "Invoice Num",
+    TO_CHAR("Invoice Date", 'DD-MM-YYYY') "Invoice Date",
+    "Booking ID",
+    TO_CHAR("Booking Date", 'DD-MM-YYYY') "Booking Date",
+    "Hotel",
+    "Payee",
+    "Guest",
+    "Guest Details",
+    "Total"
+from
+    invoices_v
+order by
+    1 desc"""
     ).fetchall()
     return {"data": [dict(row) for row in result]}
 
@@ -241,7 +238,7 @@ def printinvoice():
     return save_invoice(headers["id"])
 
 
-@invoice_bp.route("/messages/<int:invoice_id>/delete", methods=["POST"])
+@invoice_bp.route("/invoices/<int:invoice_id>/delete", methods=["POST"])
 @login_required
 @role_required("admin")
 def delete_invoice(invoice_id):
@@ -254,7 +251,7 @@ def delete_invoice(invoice_id):
     return redirect(url_for("main.homepage"))
 
 
-@invoice_bp.route("/messages/<invoice_id>/save", methods=["GET", "POST"])
+@invoice_bp.route("/invoices/<invoice_id>/save", methods=["GET", "POST"])
 @login_required
 def save_invoice(invoice_id):
 

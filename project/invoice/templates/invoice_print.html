@@ -1,69 +1,58 @@
 {% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
-{% from 'bootstrap5/table.html' import render_table %} {% block styles %}
-{{super()}}
-<style>
-  .action_icon {
-    font-size: large;
-  }
-</style>
-{% endblock %} {% block content %} {% block scripts %} {% endblock %}
-
-<div class="container">
-  <h3>Print Invoice</h3>
-  <hr />
-  <form method="POST" action="{{ url_for('invoice.printinvoice') }}">
-    {{ form.csrf_token }}
-
-    <div class="row">
-      <div class="form-group col-md-3">
-        {{ render_field(form.invoice_num) }}
+{% from 'bootstrap5/table.html' import render_table %}
+{% block styles %}
+  {{ super() }}
+{% endblock styles %}
+{% block content %}
+  {% block scripts %}
+  {% endblock scripts %}
+  <div class="container">
+    <h3>Print Invoice</h3>
+    <hr />
+    <form method="post" action="{{ url_for('invoice.printinvoice') }}">
+      {{ form.csrf_token }}
+      <div class="row">
+        <div class="form-group col-md-3">{{ render_field(form.invoice_num) }}</div>
       </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Print</button>
-    <a class="btn btn-danger" href="{{ url_for('main.homepage') }}">Cancel</a>
-  </form>
-
-  <hr />
-  <h3>Recent Invoices</h3>
-</div>
-
-<table
-  id="table"
-  data-toggle="table"
-  data-search="true"
-  data-pagination="true"
-  data-ajax="ajaxRequest"
-  show-search="true"
-  >
-  <thead>
-    <tr>
-      <th data-field="ID" data-sortable="true">#</th>
-      <th data-field="Invoice Num" data-sortable="true">Inv Num</th>
-      <th data-field="Invoice Date" data-sortable="true">Inv Date</th>
-      <th data-field="Booking ID" data-sortable="true">Booking ID</th>
-      <th data-field="Booking Date" data-sortable="true">Book Date</th>
-      <th data-field="Hotel" data-sortable="true">Hotel</th>
-      <th data-field="Payee" data-sortable="true">Payee</th>
-      <th data-field="Guest" data-sortable="true">Guest</th>
-      <th data-field="Guest Details" data-sortable="true">Guest Details</th>
-      <th data-field="Total" data-sortable="true">Total</th>
-      <th data-field="Actions" data-formatter="actionFormatter" data-events="actionEvents">Actions</th>
-    </tr>
-  </thead>
-</table>
-
-<script>
+      <button type="submit" class="btn btn-primary">Print</button>
+      <a class="btn btn-danger" href="{{ url_for('main.homepage') }}">Cancel</a>
+    </form>
+    <hr />
+    <h3>Recent Invoices</h3>
+  </div>
+  <table id="table"
+         data-toggle="table"
+         data-search="true"
+         data-pagination="true"
+         data-ajax="ajaxRequest"
+         show-search="true">
+    <thead>
+      <tr>
+        <th data-field="ID" data-sortable="true">#</th>
+        <th data-field="Invoice Num" data-sortable="true">Inv Num</th>
+        <th data-field="Invoice Date" data-sortable="true">Inv Date</th>
+        <th data-field="Booking ID" data-sortable="true">Booking ID</th>
+        <th data-field="Booking Date" data-sortable="true">Book Date</th>
+        <th data-field="Hotel" data-sortable="true">Hotel</th>
+        <th data-field="Payee" data-sortable="true">Payee</th>
+        <th data-field="Guest" data-sortable="true">Guest</th>
+        <th data-field="Guest Details" data-sortable="true">Guest Details</th>
+        <th data-field="Total" data-sortable="true">Total</th>
+        <th data-field="Actions"
+            data-formatter="actionFormatter"
+            data-events="actionEvents">Actions</th>
+      </tr>
+    </thead>
+  </table>
+  <script>
   function actionFormatter(value, row) {
     return [
-      '<a class="btn btn-primary btn-sm" href="/messages/' +
-        row.ID +
-        '/save" target="_blank">Print</a>',
-      '<form style="display:inline" action="/messages/'+row.ID+'/delete" method="post">'+
-        '{{ form.csrf_token }}'+
-        '<a class="btn btn-danger btn-sm" href="javascript:{}" onclick="this.closest('+"'form'"+').submit();return false;">'+
-          'Delete'+
-        '</a>'
+      '<form style="display:inline" action="/invoices/' + row.ID + '/delete" method="post">',
+      '<div class="btn-group">',
+      '<a class="btn btn-info btn-sm" style="margin-right:0.5rem;" href="/invoices/' + row.ID + '/save" target="_blank"><i class="bi bi-save"></i></a>',
+      '{{ form.csrf_token }}<a class="btn btn-danger btn-sm" href="javascript:{}" onclick="this.closest(' + "'form'" + ').submit();return false;"><i class="bi bi-trash"></i></a>',
+      '</div>', 
+      '</form>'
     ].join("");
   }
   function actionEvents() {
@@ -80,6 +69,5 @@
     })
   }
 
-</script>
-
-{% endblock %}
+  </script>
+{% endblock content %}

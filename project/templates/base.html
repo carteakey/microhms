@@ -4,40 +4,51 @@
 <html lang="en" class="h-100">
   <head>
     {% block head %}
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    {% block styles %}
-    <!-- Bootstrap CSS -->
-    {{ bootstrap.load_css() }} {% endblock %}
-
-    <link rel="shortcut icon" href="#" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
-
-    <title>MicroHMS</title>
-    {% endblock %}
+      <!-- Required meta tags -->
+      <meta charset="utf-8" />
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+      <meta name="description" content="Vizima Hotels"/>
+      <meta name="keywords" content="Vizima Hotels"/>
+      <title>Hotel ABC</title>
+      {% block styles %}
+        <!-- Bootstrap CSS -->
+        {{ bootstrap.load_css()}}
+      <style>
+        .spacer{
+          margin: 20px 0 20px 0;  
+        }
+      </style>
+      {% endblock styles %}
+      <link rel="shortcut icon" href="#" />
+      <!--Roboto Font Family -->
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"/>
+      <!-- Bootstrap Table -->
+      <link rel="stylesheet"
+            href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css"/>
+      <!-- Bootstrap Icons -->
+      <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"/>
+    {% endblock head %}
   </head>
 
   <body class="d-flex flex-column h-100">
 
     {% block scripts %}
-    <!-- Optional JavaScript -->
-    {{ bootstrap.load_js() }} {% endblock %}
+      <!-- Optional JavaScript -->
+      {{ bootstrap.load_js() }}
+    {% endblock scripts %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/mobile/bootstrap-table-mobile.min.js"></script>
-
-
+    <!-- Table export -->
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/export/bootstrap-table-export.js"></script>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="{{ url_for('main.homepage') }}">
@@ -48,39 +59,36 @@
             alt=""
           />&nbsp;MicroHMS</a
         >
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div
-          class="collapse navbar-collapse navbar-nav mr-auto justify-content-end"
-          id="navbarNav"
-        >
-          {{ render_nav_item('invoice.invoice_form', 'Billing Entry') }} {{
-          render_nav_item('invoice.invoice', 'Print Invoice') }} {{
-          render_nav_item('registration.booking_1', 'Guest Registration') }}
-          {{render_nav_item('login.logout', 'Logout') }}
+        <div class="collapse navbar-collapse navbar-nav mr-auto justify-content-end"
+             id="navbarNav">
+          {{ render_nav_item('invoice.invoice_form', 'Billing Entry') }}
+          {{ render_nav_item('invoice.invoice', 'Print Invoice') }}
+          {{ render_nav_item('registration.booking_1', 'Guest Registration') }}
+          {{ render_nav_item('login.logout', 'Logout') }}
         </div>
       </div>
     </nav>
 
-    <div style="margin: 20px 0 20px 0;"></div>
+    <div class="spacer"></div>
 
     <main>
       <div class="container">
-        {{ render_messages() }} {% block content %} {% endblock %}
+        {{ render_messages() }}
+        {% block content %}
+        {% endblock content %}
       </div>
     </main>
 
-    <div style="margin: 20px 0 20px 0;"></div>
+    <div class="spacer"></div>
 
     <footer class="mt-auto bg-dark">
       <div class="text-center p-3 text-light">© 2022 Hotel ABC</div>

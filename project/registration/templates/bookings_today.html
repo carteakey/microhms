@@ -1,50 +1,73 @@
 {% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
-{% from 'bootstrap5/table.html' import render_table %} {% block styles %}
-{{super()}}
-{% endblock %} {% block content %} {% block scripts %} {% endblock %}
-
-<div class="container">
-  <h3>Today's Bookings</h3>
-</div>
-
-<table
-  id="table"
-  data-toggle="table"
-  data-search="true"
-  data-pagination="true"
-  data-ajax="ajaxRequest"
-  show-search="true"
-  >
-  <thead>
-    <tr>
-      <th data-field="SEQ" data-sortable="true">SEQ</th>
-      <th data-field="A&D Register Serial No" data-sortable="true">A&D Register Serial No</th>
-      <th data-field="Hotel" data-sortable="true">Hotel</th>
-      <th data-field="Guest Name" data-sortable="true">Guest Name</th>
-      <th data-field="Guest Mobile" data-sortable="true">Guest Mobile</th>
-      <th data-field="Guest Email" data-sortable="true">Guest Email</th>
-      <th data-field="Room" data-sortable="true">Room</th>
-      <th data-field="Check-in Date" data-sortable="true">Check-in Date</th>
-      <th data-field="Check-in Time" data-sortable="true">Check-in Time</th>
-      <th data-field="Check-out Date" data-sortable="true">Check-out Date</th>
-      <th data-field="Tariff" data-sortable="true">Tariff</th>
-      <th data-field="GST" data-sortable="true">GST</th>
-      <th data-field="Tariff w/o GST" data-sortable="true">Tariff w/o GST</th>
-      <th data-field="Booking Source" data-sortable="true">Booking Source</th>
-      <th data-field="Operator" data-sortable="true">Operator</th>
-    </tr>
-  </thead>
-</table>
-
-<script>
-  
-  function ajaxRequest(params) {
-    var url= "/bookings_today/data";
-    $.get(url).then(function (res) {
-      params.success(res.data)
-    })
+{% from 'bootstrap5/table.html' import render_table %}
+{% block styles %}
+  {{ super()}}
+{% endblock styles %}
+{% block content %}
+  {% block scripts %}
+  {% endblock scripts %}
+  <div class="container">
+    <h3>Today's Bookings</h3>
+  </div>
+  <table id="table"
+         data-toggle="table"
+         data-search="true"
+         data-pagination="true"
+         data-ajax="ajaxRequest"
+         show-search="true"
+         data-show-export="true"
+         data-show-toggle="true"
+         data-show-fullscreen="true"
+         data-export-types="['excel']">
+    <thead>
+      <tr>
+        <th data-field="SEQ" data-sortable="true">SEQ</th>
+        <th data-field="A&D Register Serial No" data-sortable="true">A&D Register Serial No</th>
+        <th data-field="Hotel" data-sortable="true">Hotel</th>
+        <th data-field="Guest Name" data-sortable="true">Guest Name</th>
+        <th data-field="Guest Mobile" data-sortable="true">Guest Mobile</th>
+        <th data-field="Guest Email" data-sortable="true">Guest Email</th>
+        <th data-field="Room" data-sortable="true">Room</th>
+        <th data-field="Check-in Date" data-sortable="true">Check-in Date</th>
+        <th data-field="Check-in Time" data-sortable="true">Check-in Time</th>
+        <th data-field="Check-out Date" data-sortable="true">Check-out Date</th>
+        <th data-field="Tariff" data-sortable="true">Tariff</th>
+        <th data-field="GST" data-sortable="true">GST</th>
+        <th data-field="Tariff w/o GST" data-sortable="true">Tariff w/o GST</th>
+        <th data-field="Booking Source" data-sortable="true">Booking Source</th>
+        <th data-field="Payment Mode" data-sortable="true">Payment Mode</th>
+        <th data-field="Total Payment Received" data-sortable="true">Total Payment Received</th>
+        <th data-field="Net Payable Amount" data-sortable="true">Net Payable Amount</th>
+        <th data-field="Operator" data-sortable="true">Operator</th>
+        <th data-field="Actions"
+            data-formatter="actionFormatter"
+            data-events="actionEvents"></th>
+      </tr>
+    </thead>
+  </table>
+  <script>
+  function actionFormatter(value, row) {
+    return [
+      '<form style="display:inline" action="/bookings/' + row.SEQ + '/delete" method="post">',
+      '<div class="btn-group">',
+      '<a class="btn btn-info btn-sm" style="margin-right:0.5rem;" href="/bookings/' + row.SEQ + '/edit" target="_blank"><i class="bi bi-pen"></i></a>',
+      '{{ form.csrf_token }}<a class="btn btn-danger btn-sm" href="javascript:{}" onclick="this.closest(' + "'form'" + ').submit();return false;"><i class="bi bi-trash"></i></a>',
+      '</div>', 
+      '</form>'
+    ].join("");
   }
-
-</script>
-
-{% endblock %}
+  function actionEvents() {
+    return {
+      click: function (e, value, row) {
+        console.log(row);
+      },
+    };
+  }
+  function ajaxRequest(params) {
+    var url = "/bookings_today/data";
+    $.get(url).then(function (res) {
+      params.success(res.data);
+    });
+  }
+  </script>
+{% endblock content %}
