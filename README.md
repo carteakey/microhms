@@ -4,18 +4,19 @@ A sample application can be found here https://microhms.onrender.com (admin / ad
 
 ### Features
 
-- Create Bookings, send Booking acknowledgements via email (Mailgun)
-- Store guest details & identification and verify through Mobile OTP
-- Role based access to functionality (Admin/User)
-- Create and manage billing entries
-- Generate professional invoices via inbuilt template
+- Create Bookings, send Booking acknowledgements via email (Mailgun).
+- Store guest details & identification and verify through Mobile OTP.
+- View Today's & Monthly Bookings.
+- Role based access to functionality (Admin/User).
+- Create and manage billing entries.
+- Generate professional invoices via inbuilt template.
 
 ### Getting Started
 
-- Setup database (heroku-postgresql hobby-dev is a great free option)
-- Add database URL to .env file (example provided)
+- Setup database (heroku-postgresql hobby-dev is a great free option).
+- Add database URL to .env file (example provided).
 - Setup API keys in .env file as per need.
-- Setup a local environment
+- Setup a local environment.
 
 ```bash
 python3 -m venv env
@@ -23,7 +24,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-- Upgrade database to our model
+- Upgrade database to our model.
 
 ```bash
 flask db init
@@ -31,7 +32,7 @@ flask db migrate
 flask db upgrade
 ```
 
-- Create an Admin user and sample data
+- Create an Admin user and sample data.
 
 ```bash
 python3 -m quickstart
@@ -45,7 +46,7 @@ flask run
 
 ### Deployment
 
-This can be deployed to heroku easily using the existing procfile
+This can be deployed to heroku easily using the existing procfile.
 
 ```bash
 heroku git:remote -a yourappname
@@ -68,8 +69,3 @@ Setup environment variables
 - Mailgun and MSG91 API's are used for Email and OTP respectively. These can be replaced by alternatives in `util.py`.
 
 - Booking page requires an OTP to verify the guest first, for testing purposes 1000 value will bypass this page. **MAKE SURE TO REMOVE THIS LATER.**
-
-To be added in future releases
-
-- Page to edit invoices
-- Page to manage bookings
