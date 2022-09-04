@@ -45,7 +45,7 @@ tinycss2==1.1.1
 tomli==2.0.1
 typing_extensions==4.3.0
 urllib3==1.26.11
-weasyprint==56.1
+weasyprint==52.5
 webencodings==0.5.1
 Werkzeug==2.2.0
 WTForms==3.0.1
