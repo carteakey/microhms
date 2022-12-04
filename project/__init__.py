@@ -16,7 +16,7 @@ def create_app():
     load_dotenv()
 
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["SQLALCHEMY_DATABASE_URL"]
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
     app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
