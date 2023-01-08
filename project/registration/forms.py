@@ -77,9 +77,13 @@ class BookingsToday(FlaskForm):
 
 
 def get_booking_months():
-    rows = db.session.execute(
-        "SELECT DISTINCT TO_CHAR(checkout, 'MON-YY') AS month FROM bookings ORDER BY TO_CHAR(checkout, 'MON-YY')"
-    )
+    try: 
+        rows = db.session.execute(
+            "SELECT DISTINCT TO_CHAR(checkout, 'MON-YY') AS month FROM bookings ORDER BY TO_CHAR(checkout, 'MON-YY')"
+        )
+    except:
+        return []
+    
     return [row.month for row in rows]
 
 

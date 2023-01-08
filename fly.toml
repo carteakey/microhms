@@ -1,15 +1,11 @@
-# fly.toml file generated for microhms on 2022-12-04T09:31:03-05:00
+# fly.toml file generated for microhms on 2023-01-07T23:25:55-05:00
 
 app = "microhms"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[build]
-  builder = "paketobuildpacks/builder:base"
-
 [env]
-  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []
@@ -40,8 +36,3 @@ processes = []
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
-
-
-[deploy]
-  release_command = "python3 -m quickstart.py"
-

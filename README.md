@@ -1,6 +1,6 @@
 # MicroHMS
 
-A sample application can be found here https://microhms.onrender.com (admin / admin@123)
+A sample application can be found here https://microhms.onrender.com  (admin / admin@123)
 
 ### Features
 
@@ -43,6 +43,42 @@ python3 -m quickstart
 ```
 flask run
 ```
+
+#OR 
+
+Use the dockerfile and docker-compose
+
+- Build
+```
+docker-compose up -d --build         
+```
+
+- Create Database tables
+```
+docker-compose exec web python manage.py create_db
+```
+
+- Create an Admin user and sample data.
+```
+$ docker-compose exec web python manage.py seed_db
+Sample data inserted
+You can now login with admin/admin@123
+You can now create a new user with admin/admin@123
+
+```
+
+- Check the tables for inserted data
+docker-compose exec db psql --username=microhms --dbname=microhms
+
+microhms=# \c
+You are now connected to database "microhms" as user "microhms".
+
+microhms=# select * from public.user;
+ id | username |                                                password                                                | active 
+----+----------+--------------------------------------------------------------------------------------------------------+--------
+  1 | admin    | pbkdf2:sha256:260000$9T1l5qp81l8V6nBU$c7a2597c7a1ae7da919b1b2751e66eb8f65ebc26f199ba89686072e202b5c57d | t
+(1 row)
+
 
 ### Deployment
 
