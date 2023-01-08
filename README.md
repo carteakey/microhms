@@ -44,7 +44,7 @@ python3 -m quickstart
 flask run
 ```
 
-#OR 
+# OR 
 
 Use the dockerfile and docker-compose
 
@@ -68,6 +68,7 @@ You can now create a new user with admin/admin@123
 ```
 
 - Check the tables for inserted data
+```
 docker-compose exec db psql --username=microhms --dbname=microhms
 
 microhms=# \c
@@ -78,7 +79,7 @@ microhms=# select * from public.user;
 ----+----------+--------------------------------------------------------------------------------------------------------+--------
   1 | admin    | pbkdf2:sha256:260000$9T1l5qp81l8V6nBU$c7a2597c7a1ae7da919b1b2751e66eb8f65ebc26f199ba89686072e202b5c57d | t
 (1 row)
-
+```
 
 ### Deployment
 
