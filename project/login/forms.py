@@ -34,11 +34,13 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
     username = StringField(
         validators=[InputRequired(), Length(min=4, max=20)],
+        default="admin",
         render_kw={"placeholder": "Username"},
     )
 
     password = PasswordField(
         validators=[InputRequired(), Length(min=8, max=20)],
+        default="admin@123",
         render_kw={"placeholder": "Password"},
     )
 
