@@ -1,8 +1,49 @@
 {% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
 {% block content %}
 <div class="container-fluid d-grid">
+  <!-- AI Features Highlight (2025 Update) -->
+  <div class="alert alert-primary border-left-primary mb-4">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="mb-2"><i class="fas fa-robot"></i> New in 2025: AI-Powered Features!</h4>
+        <p class="mb-0">MicroHMS now includes artificial intelligence to enhance your hotel operations:</p>
+        <ul class="mb-0 mt-2">
+          <li>🤖 AI Booking Assistant for instant guest support</li>
+          <li>📊 Smart analytics and occupancy predictions</li>
+          <li>💰 Dynamic pricing recommendations</li>
+        </ul>
+      </div>
+      <div class="col-auto">
+        <a href="{{ url_for('ai.analytics_dashboard') }}" class="btn btn-primary">
+          <i class="fas fa-chart-line"></i> Try AI Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
   <h3>Navigate to></h3>
   <hr />
+  
+  <!-- AI Features Section -->
+  <h5 class="mt-3"><i class="fas fa-magic text-primary"></i> AI Features</h5>
+  <div class="row g-3 align-items-center">
+    <div class="col-auto">
+      <a class="btn btn-primary" href="{{ url_for('ai.chatbot_page') }}">
+        <i class="fas fa-comments"></i> AI Booking Assistant
+      </a>
+    </div>
+    <div class="col-auto">
+      <a class="btn btn-primary" href="{{ url_for('ai.analytics_dashboard') }}">
+        <i class="fas fa-chart-line"></i> Analytics Dashboard
+      </a>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-primary" onclick="showAIInfo()">
+        <i class="fas fa-info-circle"></i> Learn More
+      </button>
+    </div>
+  </div>
+  
   <h5 class="mt-3">Bookings</h5>
   <div class="row g-3 align-items-center">
     <div class="col-auto">

@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% block title %}AI Analytics Dashboard{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2><i class="fas fa-chart-line"></i> AI-Powered Analytics Dashboard</h2>
+            <p class="text-muted">Insights and predictions powered by artificial intelligence</p>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <!-- Key Metrics -->
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 id="total-bookings">-</h4>
+                            <small>Total Bookings</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-bed fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 id="avg-tariff">-</h4>
+                            <small>Average Tariff</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 id="predicted-occupancy">-</h4>
+                            <small>Tomorrow's Predicted Occupancy</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-percentage fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>AI</h4>
+                            <small>Powered Features</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-robot fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <!-- Occupancy Prediction Chart -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-area"></i> 7-Day Occupancy Predictions</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="occupancy-chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI Features Panel -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-magic"></i> AI Features</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a href="/ai/chatbot" class="list-group-item list-group-item-action">
+                            <i class="fas fa-comments"></i> AI Booking Assistant
+                            <br><small class="text-muted">Get instant booking help</small>
+                        </a>
+                        <button class="list-group-item list-group-item-action" onclick="testPricing()">
+                            <i class="fas fa-dollar-sign"></i> Smart Pricing
+                            <br><small class="text-muted">AI-powered rate optimization</small>
+                        </button>
+                        <button class="list-group-item list-group-item-action" onclick="testOccupancy()">
+                            <i class="fas fa-chart-line"></i> Demand Forecasting
+                            <br><small class="text-muted">Predict future occupancy</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Pricing Test -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6><i class="fas fa-calculator"></i> Smart Pricing Test</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Check-in Date</label>
+                        <input type="date" id="checkin-date" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Check-out Date</label>
+                        <input type="date" id="checkout-date" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Room Type</label>
+                        <select id="room-type" class="form-control">
+                            <option value="standard">Standard</option>
+                            <option value="deluxe">Deluxe</option>
+                            <option value="suite">Suite</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="getPricingRecommendation()">
+                        Get AI Pricing
+                    </button>
+                    <div id="pricing-result" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let occupancyChart;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadAnalyticsData();
+    
+    // Set default dates
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    
+    document.getElementById('checkin-date').value = tomorrow.toISOString().split('T')[0];
+    document.getElementById('checkout-date').value = nextWeek.toISOString().split('T')[0];
+});
+
+async function loadAnalyticsData() {
+    try {
+        const response = await fetch('/ai/analytics/data');
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error('Analytics error:', data.error);
+            return;
+        }
+        
+        // Update metrics
+        document.getElementById('total-bookings').textContent = data.metrics.total_bookings;
+        document.getElementById('avg-tariff').textContent = '$' + data.metrics.average_tariff;
+        
+        // Update tomorrow's prediction
+        const tomorrowPrediction = data.metrics.occupancy_predictions[1];
+        document.getElementById('predicted-occupancy').textContent = 
+            Math.round(tomorrowPrediction.predicted_occupancy * 100) + '%';
+        
+        // Create occupancy chart
+        createOccupancyChart(data.metrics.occupancy_predictions);
+        
+    } catch (error) {
+        console.error('Failed to load analytics:', error);
+    }
+}
+
+function createOccupancyChart(predictions) {
+    const ctx = document.getElementById('occupancy-chart').getContext('2d');
+    
+    const labels = predictions.map(p => {
+        const date = new Date(p.date);
+        return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    });
+    
+    const data = predictions.map(p => Math.round(p.predicted_occupancy * 100));
+    
+    if (occupancyChart) {
+        occupancyChart.destroy();
+    }
+    
+    occupancyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Predicted Occupancy (%)',
+                data: data,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+async function getPricingRecommendation() {
+    const checkinDate = document.getElementById('checkin-date').value;
+    const checkoutDate = document.getElementById('checkout-date').value;
+    const roomType = document.getElementById('room-type').value;
+    
+    if (!checkinDate || !checkoutDate) {
+        alert('Please select both check-in and check-out dates');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/ai/pricing/recommend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                check_in: checkinDate + 'T15:00:00',
+                check_out: checkoutDate + 'T11:00:00',
+                room_type: roomType,
+                current_occupancy: 0.6
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.error) {
+            document.getElementById('pricing-result').innerHTML = 
+                '<div class="alert alert-danger">Error: ' + data.error + '</div>';
+        } else {
+            document.getElementById('pricing-result').innerHTML = `
+                <div class="alert alert-success">
+                    <strong>AI Recommended Price: $${data.recommended_price}</strong><br>
+                    <small>${data.reasoning}</small>
+                </div>
+            `;
+        }
+    } catch (error) {
+        document.getElementById('pricing-result').innerHTML = 
+            '<div class="alert alert-danger">Failed to get pricing recommendation</div>';
+    }
+}
+
+function testPricing() {
+    alert('Smart Pricing: This AI feature analyzes demand patterns, seasonality, and booking trends to optimize room rates automatically.');
+}
+
+function testOccupancy() {
+    alert('Demand Forecasting: AI predicts future occupancy levels based on historical data, helping with revenue management and staffing decisions.');
+}
+</script>
+{% endblock %}
