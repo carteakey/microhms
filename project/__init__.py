@@ -55,4 +55,9 @@ def create_app():
 
         app.register_blueprint(login_bp)
 
+        # AI-powered features (2025 update)
+        from project.ai_routes import ai_bp
+        
+        app.register_blueprint(ai_bp)
+
     return app

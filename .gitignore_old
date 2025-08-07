@@ -1,0 +1,7 @@
+.vscode
+env
+__pycache__
+.env
+migrations
+latest.dump
+.DS_Store
